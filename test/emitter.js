@@ -1,4 +1,10 @@
 describe('Emitter', function(){
+
+  it('should start with an empty callbacks object', function(){
+    var emitter = new Emitter();
+    expect(emitter.callbacks).toEqual({});
+  });
+
   describe('.on', function(){
     it('should add listeners', function(){
 

@@ -11,7 +11,7 @@ module.exports = function(grunt) {
     jasmine: {
       components: {
         src: [
-        'src/Emitter.js'
+          'src/Emitter.js'
         ],
         options: {
           specs: 'test/*.js'
