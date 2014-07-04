@@ -4,7 +4,7 @@
 * Thank you.
 */
 
-function Emitter() {
+function Emitter(){
   this.callbacks = {};
 }
 
@@ -24,7 +24,15 @@ Emitter.prototype.on = function(event, func){
 /**
  *
  */
-Emitter.prototype.emit = function(){
+Emitter.prototype.emit = function(event){
+  var args = [].slice.call(arguments, 1),
+      callbacks = this.callbacks[event];
+
+  if (callbacks) {
+    for (var i = 0, len = callbacks.length; i < len; ++i) {
+      callbacks[i].apply(this, args);
+    }
+  }
 };
 
 /**

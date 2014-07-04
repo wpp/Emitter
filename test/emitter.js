@@ -47,7 +47,19 @@ describe('Emitter', function(){
 
   describe('.emit', function(){
     it('should emit to all listeners', function(){
+      var phone         = new Telephone(),
+          answeredCalls = 0,
+          missedCalls   = 0,
+          ring          = function(answered){ answered ? answeredCalls++ : missedCalls++; };
 
+      phone.on('incomingCall', ring);
+
+      phone.emit('incomingCall');
+      phone.emit('incomingCall', true);
+      phone.emit('incomingCall', true);
+
+      expect(missedCalls).toBe(1);
+      expect(answeredCalls).toBe(2);
     });
   });
 
