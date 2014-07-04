@@ -30,7 +30,7 @@ describe('Emitter', function(){
       phone.on('sms', vibrate);
       expect(phone.callbacks).toEqual({
          'incomingCall' : [ring, vibrate],
-         'sms'  : [vibrate]
+         'sms'          : [vibrate]
        });
 
 
