@@ -64,8 +64,67 @@ describe('Emitter', function(){
   });
 
   describe('.off', function(){
-    it('should remove all listeners for an event', function(){
+    it('should remove a listeners for an event', function(){
+      var phone          = new Telephone(),
+          answeredCalls  = 0,
+          missedCalls    = 0,
+          answeredCalls2 = 0,
+          missedCalls2   = 0,
+          ring           = function(answered){ answered ? answeredCalls++ : missedCalls++; },
+          ring2          = function(answered){ answered ? answeredCalls2++ : missedCalls2++; },
+          vibrate        = function(){},
+          ring3          = function(){};
 
+      phone.on('incomingCall', ring);
+      phone.on('incomingCall', ring2);
+      phone.emit('incomingCall');
+
+      phone.off('incomingCall', ring);
+
+      phone.emit('incomingCall');
+      phone.emit('incomingCall');
+
+      expect(missedCalls).toBe(1);
+      expect(missedCalls2).toBe(3);
+
+      // non-existing event
+      phone.off('wat', ring);
+
+      phone.on('sms', vibrate);
+      phone.on('sms', ring);
+
+      // should not remove the last element!
+      // var array = [1, 2, 3];
+      // array.splice(-1, 1); => [ 3 ]
+      // array => [1, 2]
+      phone.off('sms', ring3);
+
+      expect(phone.callbacks).toEqual({
+        'incomingCall'  : [ring2],
+        'sms'           : [vibrate, ring]
+      });
+    });
+  });
+
+  describe('.off', function(){
+    it('should remove all listeners for an event', function(){
+      var phone   = new Telephone(),
+          ring    = function(){},
+          ring2   = function(){},
+          vibrate = function(){},
+          ring3   = function(){};
+
+      phone.on('incomingCall', ring);
+      phone.on('incomingCall', ring2);
+      phone.on('incomingCall', ring3);
+      phone.on('incomingCall', vibrate);
+      phone.on('sms',          vibrate);
+
+      phone.off('incomingCall');
+
+      expect(phone.callbacks).toEqual({
+         'sms' : [vibrate]
+      });
     });
   });
 });

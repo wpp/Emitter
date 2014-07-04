@@ -8,6 +8,7 @@ function Emitter(){
   this.callbacks = {};
 }
 
+
 /**
  *
  */
@@ -21,6 +22,7 @@ Emitter.prototype.on = function(event, func){
     return this;
 };
 
+
 /**
  *
  */
@@ -33,10 +35,28 @@ Emitter.prototype.emit = function(event){
       callbacks[i].apply(this, args);
     }
   }
+
+  return this;
 };
+
 
 /**
  *
  */
-Emitter.prototype.off = function(){
+Emitter.prototype.off = function(event, func){
+    var callbacks = this.callbacks[event];
+
+    if (typeof func == 'undefined') {
+        delete this.callbacks[event];
+        return this;
+    }
+
+    if (callbacks) {
+        var i = callbacks.indexOf(func);
+        if (i != -1) {
+            callbacks.splice(i, 1);
+        }
+    }
+
+    return this;
 };
