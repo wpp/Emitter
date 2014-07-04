@@ -14,31 +14,33 @@ describe('Emitter', function(){
 
   describe('.on', function(){
     it('should add listeners', function(){
-      var phone = new Telephone();
+      var phone     = new Telephone(),
+          ring      = function(){},
+          vibrate   = function(){},
+          ignore    = function(){},
+          badString = new String('call');
 
-      var ring = function(){};
-      var vibrate = function(){};
 
-      phone.on('call', ring);
-      expect(phone.callbacks).toEqual({ 'call' : [ring] });
+      phone.on('incomingCall', ring);
+      expect(phone.callbacks).toEqual({ 'incomingCall' : [ring] });
 
-      phone.on('call', vibrate);
-      expect(phone.callbacks).toEqual({ 'call' : [ring, vibrate] });
+      phone.on('incomingCall', vibrate);
+      expect(phone.callbacks).toEqual({ 'incomingCall' : [ring, vibrate] });
 
       phone.on('sms', vibrate);
       expect(phone.callbacks).toEqual({
-         'call' : [ring, vibrate],
+         'incomingCall' : [ring, vibrate],
          'sms'  : [vibrate]
        });
 
-      var ignore = function(){};
+
       expect(function() {
         phone.on(3, ignore);
       }).toThrow(new Error('event is not a string literal!'));
 
-      var keyString = new String('call'); // we do not want instances of String
+      // we do not want instances of String
       expect(function() {
-        phone.on(keyString, vibrate);
+        phone.on(badString, vibrate);
       }).toThrow(new Error('event is not a string literal!'));
     });
   });
